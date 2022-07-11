@@ -19,7 +19,9 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 /**
- * @author ASUS
+ * @description:
+ * @author: nzc
+ * @date: 2022年07月09日 11:40
  */
 @SupportedAnnotationTypes({"com.nzc.my_annotation.MyGetter","com.nzc.my_annotation.MySetter"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -44,7 +46,7 @@ public class MyAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        // 获取注解类的集合，之后依次去处理
+        // 返回使用给定注释类型注释的元素的集合
         Set<? extends Element> get = roundEnv.getElementsAnnotatedWith(MyGetter.class);
         for (Element element : get) {
             // 获取当前类的抽象语法树
@@ -55,8 +57,8 @@ public class MyAnnotationProcessor extends AbstractProcessor {
                 @Override
                 public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
                     // 在抽象树中找出所有的变量
-                    // 过滤，只处理变量类型
                     jcClassDecl.defs.stream()
+                            // 过滤，只处理变量类型
                             .filter(it -> it.getKind().equals(Tree.Kind.VARIABLE))
                             // 类型强转
                             .map(it -> (JCTree.JCVariableDecl) it)
@@ -64,7 +66,6 @@ public class MyAnnotationProcessor extends AbstractProcessor {
                                 // 对于变量进行生成方法的操作
                                 jcClassDecl.defs = jcClassDecl.defs.prepend(genGetterMethod(it));
                             });
-
                     super.visitClassDef(jcClassDecl);
                 }
             });
@@ -86,10 +87,7 @@ public class MyAnnotationProcessor extends AbstractProcessor {
                     super.visitClassDef(jcClassDecl);
                 }
             });
-
         }
-
-
         return true;
     }
 

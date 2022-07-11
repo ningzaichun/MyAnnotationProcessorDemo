@@ -5,7 +5,7 @@ import com.nzc.my_annotation.MySetter;
 
 /**
  * @description:
- * @author: Yihui Wang
+ * @author: nzc
  * @date: 2022年07月09日 11:40
  */
 @MyGetter
